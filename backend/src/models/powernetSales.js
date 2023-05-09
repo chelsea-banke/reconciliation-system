@@ -24,5 +24,5 @@ class PowerNetSales{
         }
     };
 }
-
-module.exports = PowerNetSales
+const powerNetSales = new PowerNetSales
+module.exports = powerNetSales
