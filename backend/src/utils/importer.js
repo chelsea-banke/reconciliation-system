@@ -6,17 +6,17 @@ const importSales = async (path, source)=>{
     if (source=='legacy'){
         return (JSON.stringify(csvtojson.fieldDelimiter('#').getJsonFromCsv(path), null, 2)) 
     }
-    if (source=='mtn' || source=='expressExchange'){
+    else if (source=='mtn' || source=='expressExchange'){
         return (JSON.stringify(csvtojson.fieldDelimiter(',').getJsonFromCsv(path), null, 2))
     }
-    if (source=='orange'){
+    else if (source=='orange'){
         return (JSON.stringify(csvtojson.fieldDelimiter(';').getJsonFromCsv(path), null, 2))
     }
-    if (source=='ecobank' || source=='afrikpay'){
+    else if (source=='ecobank' || source=='afrikpay'){
         let out = []
         const sales = (excel.parse(path))[0].data
         const keys = sales[0]
-        
+
         sales.slice(1, -1).forEach(values => {
             out.push(keys.reduce((obj, key, index) => {
                 obj[key] = values[index];

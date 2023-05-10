@@ -1,6 +1,7 @@
 const importSales = require('../../utils/importer')
 const Filepaths = require('../../utils/paths.json')
 const partnerSales = require('../../models/partnerSales')
+const powernetSales = require('../../models/powernetSales')
 
 class Load{
     async byApi(id=''){
@@ -9,7 +10,7 @@ class Load{
         
         for (let source in paths){
             const sales = JSON.parse(await importSales(paths[source], id))
-            // console.log(JSON.parse(sales))
+            // console.log(sales)
             if (id == 'mtn'){
                 sales.forEach((sale)=>{
                     partnerSales.insert({
@@ -56,13 +57,13 @@ class Load{
                 })    
             }
             else if (id == 'legacy'){
-                sales.forEach((sale)=>{
-                    partnerSales.insert({
+                sales.slice(0, 10000).forEach((sale)=>{
+                    powernetSales.insert({
                         "partner": sale.POS, 
                         "token": sale.TOKEN, 
                         "amount": sale.PAID, 
                         "kwh": null, 
-                        "vendDate": sale.VENDING_TIME, 
+                        "vendDate": sale.VENING_TIME, 
                         "transactionId": null, 
                         "fees": null, 
                         "meterNumber": sale.METER_NO, 
