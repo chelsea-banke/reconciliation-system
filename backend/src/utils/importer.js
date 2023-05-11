@@ -1,20 +1,26 @@
 const csvtojson = require('convert-csv-to-json')
 const excel = require('node-xlsx');
+const pool = require('../utils/pool')
 // require('')
 
-const importSales = async (path, source)=>{
-    if (source=='legacy'){
-        return (JSON.stringify(csvtojson.fieldDelimiter('#').getJsonFromCsv(path), null, 2)) 
+const importSales = async (id)=>{
+    const connection = await pool.getConnection();
+    const partner = ((await connection.query('SELECT * FROM Partners'))[0].map(obj=>{
+        if (obj['Partner_Name']==id){
+            return obj
+        }
+    }))[0]
+
+    let sales = []
+    if (partner['File_Type'] == 'csv'){
+        return [(JSON.stringify(
+            csvtojson.fieldDelimiter(partner['Delimeter'])
+            .getJsonFromCsv(partner['Source']), null, 2
+        )), partner]
     }
-    else if (source=='mtn' || source=='expressExchange'){
-        return (JSON.stringify(csvtojson.fieldDelimiter(',').getJsonFromCsv(path), null, 2))
-    }
-    else if (source=='orange'){
-        return (JSON.stringify(csvtojson.fieldDelimiter(';').getJsonFromCsv(path), null, 2))
-    }
-    else if (source=='ecobank' || source=='afrikpay'){
+    else if (partner['File_Type'] == 'xls'){
         let out = []
-        const sales = (excel.parse(path))[0].data
+        const sales = (excel.parse(partner['Source']))[0].data
         const keys = sales[0]
 
         sales.slice(1, -1).forEach(values => {
@@ -23,7 +29,7 @@ const importSales = async (path, source)=>{
                 return obj;
             }, {}))
         })
-        return(JSON.stringify(out))
+        return([JSON.stringify(out), partner])
     }
 }
 

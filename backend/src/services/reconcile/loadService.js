@@ -5,103 +5,24 @@ const powernetSales = require('../../models/powernetSales')
 
 class Load{
     async byApi(id=''){
-        let paths = Filepaths
-        if (!id==''){paths={id: Filepaths[id]}}
+        let [sales, partner] = await importSales(id)
+        sales = JSON.parse(sales)
+        // console.log(sales)
         
-        for (let source in paths){
-            const sales = JSON.parse(await importSales(paths[source], id))
-            // console.log(sales)
-            if (id == 'mtn'){
-                sales.forEach((sale)=>{
-                    partnerSales.insert({
-                        "partnerId": sale.PARTNER, 
-                        "token": null, 
-                        "amount": sale.AMOUNT, 
-                        "kwh": null, 
-                        "vendDate": sale.TXDATE, 
-                        "transactionId": sale.TXID, 
-                        "fees": null, 
-                        "meterNumber": sale.METER_NUMBER, 
-                        "eneoAccount": null
-                    }) 
-                })    
-            }
-            else if (id == 'orange'){
-                sales.forEach((sale)=>{
-                    partnerSales.insert({
-                        "partnerId": null, 
-                        "token": sale.Token, 
-                        "amount": sale.Montantdelatransaction, 
-                        "kwh": sale.KWH, 
-                        "vendDate": sale.Datedetransaction, 
-                        "transactionId": null, 
-                        "fees": null, 
-                        "meterNumber": sale.Numérodetéléphoneduclient, 
-                        "eneoAccount": null
-                    }) 
-                })    
-            }
-            else if (id == 'expressExchange'){
-                sales.forEach((sale)=>{
-                    partnerSales.insert({
-                        "partnerId": null, 
-                        "token": sale.Token, 
-                        "amount": sale.Montant, 
-                        "kwh": sale.Kwh, 
-                        "vendDate": sale.Datedemiseajour, 
-                        "transactionId": null, 
-                        "fees": null, 
-                        "meterNumber": null, 
-                        "eneoAccount": null
-                    }) 
-                })    
-            }
-            else if (id == 'legacy'){
-                sales.slice(0, 10000).forEach((sale)=>{
-                    powernetSales.insert({
-                        "partner": sale.POS, 
-                        "token": sale.TOKEN, 
-                        "amount": sale.PAID, 
-                        "kwh": null, 
-                        "vendDate": sale.VENING_TIME, 
-                        "transactionId": null, 
-                        "fees": null, 
-                        "meterNumber": sale.METER_NO, 
-                        "msgId": sale.MSGID
-                    }) 
-                })   
-            }
-            else if (id == 'ecobank'){
-                console.log('ecobank')
-                sales.forEach((sale)=>{
-                    partnerSales.insert({
-                        "partnerId": sale["Patner ID"], 
-                        "token": sale['Token'], 
-                        "amount": sale['Montant'], 
-                        "kwh": sale['KWH'].slice(0,-3), 
-                        "vendDate": sale['Date'], 
-                        "transactionId": sale['External Transaction Id'], 
-                        "fees": null, 
-                        "meterNumber": sale['Meter Number'], 
-                        "msgId": null
-                    }) 
-                })
-            }
-            else if (id == 'afrikpay'){
-                sales.forEach((sale)=>{
-                    partnerSales.insert({
-                        "partnerId": sale['Patner ID'], 
-                        "token": sale['Token'], 
-                        "amount": sale['Montant'], 
-                        "kwh": sale['KWH'].slice(0,-3), 
-                        "vendDate": null, 
-                        "transactionId": sale['External Transaction id'], 
-                        "fees": null, 
-                        "meterNumber": sale['Meter Number'], 
-                        "msgId": null
-                    }) 
-                })   
-            }
+        if (id != 'legacy'){
+            sales.forEach((sale)=>{
+                partnerSales.insert({
+                    "partnerId": partner['Partner_ID'] === null ? null : sale[partner['Partner_ID']], 
+                    "token": partner['Token'] === null ? null : sale[partner['Token']], 
+                    "amount": partner['Amount'] === null ? null : sale[partner['Amount']], 
+                    "kwh": partner['KWH'] === null ? null : (sale[partner['KWH']].slice(-3) === 'kwh') ? sale[partner['KWH']].slice(0, -3): sale[partner['KWH']], 
+                    "vendDate": partner['VendDate'] === null ? null : sale[partner['VendDate']], 
+                    "transactionId": partner['Transaction_ID'] === null ? null : sale[partner['Transaction_ID']], 
+                    "fees": partner['Fees'] === null ? null : sale[partner['Fees']], 
+                    "meterNumber": partner['Meter_Number'] === null ? null : sale[partner['Meter_Number']], 
+                    "eneoAccount": partner['Eneo_Account'] === null ? null : sale[partner['Eneo_Account']]
+                }) 
+            })
         }
     }
     async byUpload(){
