@@ -5,12 +5,10 @@ const pool = require('../utils/pool')
 
 const importSales = async (id)=>{
     const connection = await pool.getConnection();
-    const partner = ((await connection.query('SELECT * FROM Partners'))[0].map(obj=>{
-        if (obj['Partner_Name']==id){
-            return obj
-        }
+    const partner = ((await connection.query('SELECT * FROM Partners'))[0].filter(obj=>{
+        return obj['Partner_Name']==id
     }))[0]
-
+    console.log(partner)
     let sales = []
     if (partner['File_Type'] == 'csv'){
         return [(JSON.stringify(

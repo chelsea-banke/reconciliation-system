@@ -1,8 +1,0 @@
-{
-    "mtn": "/media/chelsea/New Volume/projects/repositories/reconciliation-system/backend/resources/mtn.csv",
-    "orange": "/media/chelsea/New Volume/projects/repositories/reconciliation-system/backend/resources/orange.csv",
-    "expressExchange": "/media/chelsea/New Volume/projects/repositories/reconciliation-system/backend/resources/express_exchange.csv",
-    "afrikpay": "/media/chelsea/New Volume/projects/repositories/reconciliation-system/backend/resources/afrikpay.xls",
-    "ecobank": "/media/chelsea/New Volume/projects/repositories/reconciliation-system/backend/resources/ecobank.xls",
-    "legacy": "/media/chelsea/New Volume/projects/repositories/reconciliation-system/backend/resources/legacy.csv"
-}
