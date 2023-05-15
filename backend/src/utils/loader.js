@@ -4,20 +4,22 @@ const pool = require('./pool')
 // require('')
 
 const loadSales = async (id)=>{
-    let partner = {
-        "File_Type": "csv",
-        "Delimeter": "#",
-        "Source": "/media/chelsea/New Volume/projects/repositories/reconciliation-system/backend/resources/powernet.csv"
+    let partner
+    if (id == 'powernet'){
+        partner = {
+            "File_Type": "csv",
+            "Delimeter": "#",
+            "Source": "/media/chelsea/New Volume/projects/repositories/reconciliation-system/backend/resources/powernet.csv"
+        }
     }
-    if (id!='powernet'){
+    else {
         const connection = await pool.getConnection();
         partner = ((await connection.query('SELECT * FROM Partners'))[0].filter(obj=>{
             return obj['Partner_Name']==id
         }))[0]
     }
-    console.log(partner)
-    let sales = []
     if (partner['File_Type'] == 'csv'){
+        console.log(id)
         return [(JSON.stringify(
             csvtojson.fieldDelimiter(partner['Delimeter'])
             .getJsonFromCsv(partner['Source']), null, 2
