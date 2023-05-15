@@ -1,13 +1,20 @@
 const csvtojson = require('convert-csv-to-json')
 const excel = require('node-xlsx');
-const pool = require('../utils/pool')
+const pool = require('./pool')
 // require('')
 
-const importSales = async (id)=>{
-    const connection = await pool.getConnection();
-    const partner = ((await connection.query('SELECT * FROM Partners'))[0].filter(obj=>{
-        return obj['Partner_Name']==id
-    }))[0]
+const loadSales = async (id)=>{
+    let partner = {
+        "File_Type": "csv",
+        "Delimeter": "#",
+        "Source": "/media/chelsea/New Volume/projects/repositories/reconciliation-system/backend/resources/powernet.csv"
+    }
+    if (id!='powernet'){
+        const connection = await pool.getConnection();
+        partner = ((await connection.query('SELECT * FROM Partners'))[0].filter(obj=>{
+            return obj['Partner_Name']==id
+        }))[0]
+    }
     console.log(partner)
     let sales = []
     if (partner['File_Type'] == 'csv'){
@@ -31,4 +38,4 @@ const importSales = async (id)=>{
     }
 }
 
-module.exports = importSales
+module.exports = loadSales

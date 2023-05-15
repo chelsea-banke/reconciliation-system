@@ -1,4 +1,4 @@
-const pool = require('../../utils/pool')
+const pool = require('../utils/pool')
 
 class Reconsciliation{
     async byToken(source){

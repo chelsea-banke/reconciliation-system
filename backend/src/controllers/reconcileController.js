@@ -1,9 +1,9 @@
 const express = require('express')
 const router = express.Router()
-const load = require('../services/reconcile/loadService')
-const addNewPartner = require('../services/reconcile/addNewPartner')
+const load = require('../services/load/loadSalesService')
+const addNewPartner = require('../services/load/addNewPartner')
 
-router.get('/', async (req, res, next) => {
+router.get('/sales', async (req, res, next) => {
   try {
     await load.byApi()
     res.send('success')
@@ -11,7 +11,7 @@ router.get('/', async (req, res, next) => {
     next(error)
   }
 })
-router.get('/:id', async (req, res, next) => {
+router.get('/sales/:id', async (req, res, next) => {
   try {
     await load.byApi(req.params.id)
     // await reconcile.byToken(req.params.id)

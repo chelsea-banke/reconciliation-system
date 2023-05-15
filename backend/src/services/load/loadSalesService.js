@@ -1,4 +1,4 @@
-const importSales = require('../../utils/importer')
+const importSales = require('../../utils/loader')
 const partnerSales = require('../../models/partnerSales')
 const powernetSales = require('../../models/powernetSales')
 const moment = require('moment');
@@ -8,7 +8,7 @@ class Load{
         let [sales, partner] = await importSales(id)
         sales = JSON.parse(sales)
         
-        if (id != 'legacy'){
+        if (id != 'powernet'){
             sales.forEach((sale)=>{
                 const vendDate = new Date(sale[partner['VendDate']])
                 vendDate.setHours(0, 0, 0, 0)
@@ -23,6 +23,24 @@ class Load{
                     "fees": partner['Fees'] === null ? null : sale[partner['Fees']], 
                     "meterNumber": partner['Meter_Number'] === null ? null : sale[partner['Meter_Number']], 
                     "eneoAccount": partner['Eneo_Account'] === null ? null : sale[partner['Eneo_Account']]
+                }) 
+            })
+        }
+        else{
+            sales.forEach((sale)=>{
+                const vendDate = new Date(sale["VENING_TIME"])
+                vendDate.setHours(0, 0, 0, 0)
+                console.log(sale)
+                powernetSales.insert({
+                    "partner": sale["POS"], 
+                    "token": sale["TOKEN"], 
+                    "amount": sale["PAID"], 
+                    "kwh": null, 
+                    "vendDate": vendDate.toISOString().slice(0, 19).replace('T', ' '), 
+                    "transactionId": sale["ORDER_ID"], 
+                    "fees": null, 
+                    "meterNumber": sale["METER_NO"], 
+                    "msgId": sale["MSGID"]
                 }) 
             })
         }
