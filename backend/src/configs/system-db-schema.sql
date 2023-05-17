@@ -45,6 +45,7 @@ CREATE TABLE Partners (
     Fees VARCHAR(30),
     Meter_Number VARCHAR(30),
     Eneo_Account VARCHAR(30),
+    Reconcile_By VARCHAR(30),
     PRIMARY KEY (ID)
 ) ENGINE = InnoDB;
 
