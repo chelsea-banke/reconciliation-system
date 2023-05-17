@@ -1,9 +1,9 @@
 const pool = require('./pool')
 
-const reconcile = async (query)=>{
+const systemQuery = async (query, values=[])=>{
     const connection = await pool.getConnection()
     try {
-        const results = await pool.query(query)
+        const results = await pool.query(query, values)
         console.log('Query executed successfully')
         return results
     } 
@@ -15,4 +15,4 @@ const reconcile = async (query)=>{
     }
 }
 
-module.exports = reconcile
+module.exports = systemQuery

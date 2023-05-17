@@ -3,9 +3,9 @@ const router = express.Router()
 const generatePowernetExceptions = require('../services/exception/generatePowernetExceptions')
 const generatePartnerExceptions = require('../services/exception/generatePartnerExceptions')
 
-router.get('/', async (req, res, next) => {
+router.poat('/', async (req, res, next) => {
   try {
-    res.send(await generatePartnerExceptions.byToken())
+    res.send(await generatePartnerExceptions.byToken(req.body))
   } catch (error) {
     next(error)
   }

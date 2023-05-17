@@ -1,5 +1,5 @@
 const pool = require('../../utils/pool')
-const reconcile = require('../../utils/recon')
+const systemQuery = require('../../utils/query')
 
 class PartnerExceptionGenerator{
     async byToken(){
@@ -12,7 +12,8 @@ class PartnerExceptionGenerator{
               AND DATE(t2.VendDate) = DATE(DATE_SUB(CURDATE(), INTERVAL 1 DAY))
               AND t2.Partner IS NOT NULL;     
         `)
-        return (reconcile(query))
+        return (systemQuery
+        (query))
     }
 
     async byMessageId(source){
@@ -25,7 +26,8 @@ class PartnerExceptionGenerator{
               AND DATE(t2.VendDate) = DATE(DATE_SUB(CURDATE(), INTERVAL 1 DAY))
               AND t2.Partner IS NOT NULL;     
         `)
-        return(reconcile(query))
+        return(systemQuery
+        (query))
     }
 }
 

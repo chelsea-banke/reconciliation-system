@@ -1,5 +1,5 @@
 const pool = require('../../utils/pool')
-const reconcile = require('../../utils/recon')
+const systemQuery = require('../../utils/query')
 
 class PowernetExceptionGenerator{
     async byToken(){
@@ -12,7 +12,7 @@ class PowernetExceptionGenerator{
               AND DATE(t1.VendDate) = DATE(DATE_SUB(CURDATE(), INTERVAL 1 DAY))
               AND t1.Partner_ID IS NOT NULL;     
         `)
-        return (reconcile(query))
+        return  systemQuery((query))
     }
     async byAlt(){
         const query = `
@@ -28,7 +28,7 @@ class PowernetExceptionGenerator{
                 AND t1.Partner = 'MTNPrepaid'
             ORDER BY t1.VendDate DESC;
         `
-        return(reconcile(query))
+        return systemQuery((query))
     }
     async byMessageId(){
         const query =(`
@@ -40,7 +40,7 @@ class PowernetExceptionGenerator{
               AND DATE(t1.VendDate) = DATE(DATE_SUB(CURDATE(), INTERVAL 1 DAY))
               AND t1.Partner_ID IS NOT NULL;     
         `)
-        return(reconcile(query))
+        return systemQuery((query))
     }
 }
 
