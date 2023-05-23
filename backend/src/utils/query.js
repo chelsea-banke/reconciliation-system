@@ -4,7 +4,7 @@ const systemQuery = async (query, values=[])=>{
     const connection = await pool.getConnection()
     try {
         const results = await pool.query(query, values)
-        console.log('Query executed successfully')
+        // console.log('Query executed successfully')
         return results
     } 
     catch (error) {

@@ -5,7 +5,7 @@ const pool = require('../../utils/pool')
 
 class Load{
     async byApi(paramId=''){
-        let ids = ['powernet']
+        let ids = []
         const connection = await pool.getConnection()
         const partners = (await connection.query('SELECT * FROM Partners'))[0]
         partners.forEach(partner => {
@@ -16,17 +16,16 @@ class Load{
                 return i === paramId
             })
         }
-        // console.log(ids)
+        console.log(ids)
         for (const id of ids){
             let [sales, partner] = await importSales(id)
             sales = JSON.parse(sales)
+            console.log(`loading ${id} sales into db...`)
             if (id != 'powernet'){
-                sales.forEach((sale)=>{
+                sales.forEach(async (sale)=>{
                     const vendDate = new Date(sale[partner['VendDate']])
                     vendDate.setHours(0, 0, 0, 0)
-                    // console.log(sale)
-                    // console.log(vendDate.valid)
-                    partnerSales.insert({
+                    console.log(await partnerSales.insert({
                         "partnerId": partner['Partner_ID'] === null ? partner['Partner_Name'] : sale[partner['Partner_ID']], 
                         "token": partner['Token'] === null ? null : sale[partner['Token']], 
                         "amount": partner['Amount'] === null ? null : sale[partner['Amount']], 
@@ -37,7 +36,7 @@ class Load{
                         "meterNumber": partner['Meter_Number'] === null ? null : sale[partner['Meter_Number']], 
                         "eneoAccount": partner['Eneo_Account'] === null ? null : sale[partner['Eneo_Account']]
                     }) 
-                })
+                )})
             }
             else{
                 sales.forEach((sale)=>{

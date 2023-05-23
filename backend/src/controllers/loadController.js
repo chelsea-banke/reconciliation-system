@@ -15,7 +15,7 @@ router.get('/sales/:id', async (req, res, next) => {
   try {
     await load.byApi(req.params.id)
     // await reconcile.byToken(req.params.id)
-    res.send('done')
+    res.send("done")
   } catch (error) {
     next(error)
   }

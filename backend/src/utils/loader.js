@@ -5,7 +5,8 @@ const pool = require('./pool')
 
 const loadSales = async (id)=>{
     let partner
-    if (id == 'powernet'){
+    console.log(`fetching ${id} details...`)
+    if (id == "powernet"){
         partner = {
             "File_Type": "csv",
             "Delimeter": "#",
@@ -18,8 +19,9 @@ const loadSales = async (id)=>{
             return obj['Partner_Name']==id
         }))[0]
     }
+    
+    console.log(`fetching ${id} sales...`)
     if (partner['File_Type'] == 'csv'){
-        console.log(id)
         return [(JSON.stringify(
             csvtojson.fieldDelimiter(partner['Delimeter'])
             .getJsonFromCsv(partner['Source']), null, 2
@@ -29,7 +31,6 @@ const loadSales = async (id)=>{
         let out = []
         const sales = (excel.parse(partner['Source']))[0].data
         const keys = sales[0]
-
         sales.slice(1, -1).forEach(values => {
             out.push(keys.reduce((obj, key, index) => {
                 obj[key] = values[index];

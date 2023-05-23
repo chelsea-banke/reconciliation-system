@@ -8,8 +8,8 @@ dotenv.config()
 const server = express()
 server.use(bodyParser.json())
 
-server.use('/load', loadRouter)
-server.use('/reconcile', reconcileSales)
+server.use('/api/load', loadRouter)
+server.use('/api/reconcile', reconcileSales)
 
 server.listen(process.env.PORT, ()=>{
     console.log(`listening on port ${process.env.PORT}`)
