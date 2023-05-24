@@ -5,7 +5,7 @@ const pool = require('../../utils/pool')
 
 class Load{
     async byApi(paramId=''){
-        let ids = []
+        let ids = ["powernet"]
         const connection = await pool.getConnection()
         const partners = (await connection.query('SELECT * FROM Partners'))[0]
         partners.forEach(partner => {
@@ -39,11 +39,10 @@ class Load{
                 )})
             }
             else{
-                sales.forEach((sale)=>{
+                sales.splice(0, 1000).forEach(async (sale)=>{
                     const vendDate = new Date(sale["VENING_TIME"])
                     vendDate.setHours(0, 0, 0, 0)
-                    // console.log(sale)
-                    powernetSales.insert({
+                    console.log(await powernetSales.insert({
                         "partner": sale["POS"], 
                         "token": sale["TOKEN"], 
                         "amount": sale["PAID"], 
@@ -53,7 +52,7 @@ class Load{
                         "fees": null, 
                         "meterNumber": sale["METER_NO"], 
                         "msgId": sale["MSGID"]
-                    }) 
+                    }))
                 })
             }
         }
