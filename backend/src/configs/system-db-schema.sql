@@ -51,15 +51,6 @@ CREATE TABLE Partners (
 
 CREATE TABLE Exceptions (
     ID INT AUTO_INCREMENT NOT NULL,
-    Reference NUMERIC(9, 2) NOT NULL,
-    Type VARCHAR(30) NOT NULL,
-    Status VARCHAR(30) NOT NULL,
-    VendDate DATETIME NOT NULL
-    PRIMARY KEY (ID)
-) ENGINE = InnoDB;
-
-CREATE TABLE Exceptions (
-    ID INT AUTO_INCREMENT NOT NULL,
     Type VARCHAR(30) NOT NULL,
     Reference NUMERIC(9, 2) NOT NULL,
     Status VARCHAR(30) NOT NULL,
@@ -70,5 +61,20 @@ CREATE TABLE Exceptions (
     Token VARCHAR(50),
     VendDate DATE,
     MsgID VARCHAR(30),
+    PRIMARY KEY (ID)
+) ENGINE = InnoDB;
+
+CREATE TABLE LoadExceptionSales (
+    ID INT AUTO_INCREMENT NOT NULL,
+    Partner_ID VARCHAR(30),
+    Token VARCHAR(30),
+    Amount NUMERIC(9, 2),
+    KWH NUMERIC(9, 2),
+    VendDate DATETIME,
+    Transaction_ID VARCHAR(40),
+    Fees NUMERIC(9, 2),
+    Meter_Number VARCHAR(40),
+    Eneo_Account VARCHAR(40),
+    MSGID VARCHAR(255),
     PRIMARY KEY (ID)
 ) ENGINE = InnoDB;
