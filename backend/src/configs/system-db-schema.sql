@@ -66,6 +66,7 @@ CREATE TABLE Exceptions (
 
 CREATE TABLE LoadExceptionSales (
     ID INT AUTO_INCREMENT NOT NULL,
+    Type VARCHAR(30),
     Partner_ID VARCHAR(30),
     Token VARCHAR(30),
     Amount NUMERIC(9, 2),

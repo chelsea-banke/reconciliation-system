@@ -4,8 +4,9 @@ class ExceptionSales{
     async insert(sale){
         const connection = await pool.getConnection()
         try{
-            const query = 'INSERT INTO LoadExceptionSales (Partner_ID, Token, Amount, KWH, VendDate, Transaction_ID, Fees, Meter_Number, Eneo_Account, Message_ID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+            const query = 'INSERT INTO LoadExceptionSales (Type, Partner_ID, Token, Amount, KWH, VendDate, Transaction_ID, Fees, Meter_Number, Eneo_Account, Message_ID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
             const values = [
+                sale.type,
                 sale.partnerId, 
                 sale.token, 
                 sale.amount, 
