@@ -4,7 +4,12 @@ class PowerNetSales{
     async insert(sale){
         const connection = await pool.getConnection()
         try{
-            const query = 'INSERT INTO PowerNetPPSales (Partner, Token, Amount, KWH, VendDate, Transaction_ID, Fees, Meter_Number, MSGID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
+            const query = `INSERT INTO PowerNetPPSales (Partner, Token, Amount, KWH, VendDate, Transaction_ID, Fees, Meter_Number, MSGID)
+            SELECT ?, ?, ?, ?, ?, ?, ?, ?, ?
+            FROM dual
+            WHERE NOT EXISTS (
+              SELECT 1 FROM PowerNetPPSales WHERE Transaction_ID = ?
+            )`;
             const values = [
                 sale.partner, 
                 sale.token, 
@@ -14,7 +19,8 @@ class PowerNetSales{
                 sale.transactionId, 
                 sale.fees, 
                 sale.meterNumber, 
-                sale.msgId
+                sale.msgId,
+                sale.transactionId,
             ]
             const dt = (await connection.query(query, values))[0]
             return dt
