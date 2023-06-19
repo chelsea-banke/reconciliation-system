@@ -11,9 +11,9 @@ router.post('/', async (req, res, next) => {
   }
 })
 
-router.get('/', async (req, res, next) => {
+router.post('/csv', async (req, res, next) => {
   try {
-    res.send(csvtojson.fieldDelimiter(',').getJsonFromCsv('/home/chelsea/Downloads/mtn.csv'), null, 2)
+    res.send(await csvtojson.fieldDelimiter(',').getJsonFromCsv(req.body['path']), null, 2)
   } catch (error) {
     next(error)
   }

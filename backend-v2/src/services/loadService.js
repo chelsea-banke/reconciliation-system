@@ -1,5 +1,6 @@
 const fieldCheck = require("../utils/fieldCheckUtils")
 const partnerSales = require("../models/partnerSales")
+const brokenSales = require("../models/brokensales")
 
 const loader = async (sales)=>{
     let faultySales = []
@@ -11,6 +12,7 @@ const loader = async (sales)=>{
                 "faultySale": sale,
                 "faultyFields": status["fields"]
             })
+            brokenSales.insert(sale, JSON.stringify(status["fields"]))
         }
         else{
             partnerSales.insert(sale)

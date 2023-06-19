@@ -1,11 +1,11 @@
 const pool = require('../utils/pool')
 
-class PartnerSales{ 
-    async insert(sale){
+class BrokenSales{ 
+    async insert(sale, brokenFields){
         const connection = await pool.getConnection()
         try{
-            const query = `INSERT INTO PartnerPPSales (Partner_ID, Token, Amount, KWH, VendDate, Transaction_ID, Fees, Meter_Number, Eneo_Account, Message_ID)
-            SELECT ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+            const query = `INSERT INTO BrokenSales (Partner_ID, Token, Amount, KWH, VendDate, Transaction_ID, Fees, Meter_Number, Eneo_Account, Message_ID, Broken_Fields)
+            SELECT ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
             FROM dual
             WHERE NOT EXISTS (
               SELECT 1 FROM PartnerPPSales WHERE Message_ID = ?
@@ -21,6 +21,7 @@ class PartnerSales{
                 sale.meterNumber, 
                 sale.eneoAccount,
                 sale.messageId,
+                brokenFields,
                 sale.messageId,
             ]
             console.log(await connection.query(query, values))[0]
@@ -33,5 +34,5 @@ class PartnerSales{
         }
     }
 }
-const partnerSales = new PartnerSales
-module.exports = partnerSales
+const brokenSales = new BrokenSales
+module.exports = brokenSales
