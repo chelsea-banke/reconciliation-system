@@ -1,11 +1,20 @@
 const csvtojson = require('convert-csv-to-json')
-const loader = require("../services/loadService")
+const partnerLoad = require("../services/partnerLoadService")
+const powernetLoad = require("../services/powernetLoadService")
 const express = require('express')
 const router = express.Router()
 
 router.post('/', async (req, res, next) => {
   try {
-    res.send(await loader(req.body["partnerId"], req.body["sales"]))
+    res.send(await partnerLoad(req.body["partnerId"], req.body["sales"]))
+  } catch (error) {
+    next(error)
+  }
+})
+
+router.get('powernet', (req, res, next)=>{
+  try{
+    res.send(powernetLoad())
   } catch (error) {
     next(error)
   }
