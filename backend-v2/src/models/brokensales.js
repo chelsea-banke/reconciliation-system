@@ -24,7 +24,7 @@ class BrokenSales{
                 brokenFields,
                 sale.messageId,
             ]
-            console.log(await connection.query(query, values))[0]
+            console.log((await connection.query(query, values))[0])
         }
         catch(error){
             console.log("error", error)

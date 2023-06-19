@@ -5,7 +5,7 @@ const router = express.Router()
 
 router.post('/', async (req, res, next) => {
   try {
-    res.send(loader(req.body))
+    res.send(await loader(req.body["partnerId"], req.body["sales"]))
   } catch (error) {
     next(error)
   }
