@@ -8,11 +8,11 @@ CREATE TABLE PowerNetPPSales (
     Token VARCHAR(30) NOT NULL,
     Amount NUMERIC(9, 2),
     KWH NUMERIC(9, 2),
-    VendDate DATETIME NOT NULL,
+    VendDate VARCHAR(30) NOT NULL,
     Transaction_ID INT,
     Fees NUMERIC(9, 2),
     Meter_Number VARCHAR(40),
-    MSGID VARCHAR(255),
+    Message_ID VARCHAR(255),
     PRIMARY KEY (ID)
 ) ENGINE = InnoDB;
 

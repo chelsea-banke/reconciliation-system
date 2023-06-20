@@ -1,13 +1,15 @@
 const csvtojson = require('convert-csv-to-json')
+const powernetSales = require("../models/powernetSales")
 
-const loadPowernet = async (path="")=>{
-    const sales = (await csvtojson.fieldDelimiter(',').getJsonFromCsv(path), null, 2)
+const loadPowernet = async ()=>{
+    const sales = (await csvtojson.fieldDelimiter('#').getJsonFromCsv("/home/chelsea/Downloads/powernet.csv"))
 
     sales.forEach(async (sale)=>{
+        console.log(sale)
         const vendDate = new Date(sale["VENING_TIME"])
         vendDate.setHours(0, 0, 0, 0)
-        const currentDate = new Date().toLocaleString('en-US', { month: 'short', day: '2-digit', year: 'numeric' });
-        if (sale['ORDER_ID'] != null){
+
+        if (sale['ORDERS_ID'] != null){
             console.log(await powernetSales.insert({
                 "partner": sale["POS"], 
                 "token": sale["TOKEN"], 
@@ -17,8 +19,7 @@ const loadPowernet = async (path="")=>{
                 "transactionId": sale["ORDER_ID"], 
                 "fees": null, 
                 "meterNumber": sale["METER_NO"], 
-                "messageId": sale["MSGID"],
-                "reconDate": currentDate
+                "messageId": sale["MSGID"]
             }))
         }
     })
