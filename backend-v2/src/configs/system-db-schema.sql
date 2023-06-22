@@ -2,82 +2,85 @@ CREATE DATABASE reconciliation_db;
 
 USE reconciliation_db;
 
-CREATE TABLE PowerNetPPSales (
-    ID INT AUTO_INCREMENT NOT NULL,
-    Partner VARCHAR(30) NOT NULL,
-    Token VARCHAR(30) NOT NULL,
-    Amount NUMERIC(9, 2),
-    KWH NUMERIC(9, 2),
-    VendDate VARCHAR(30) NOT NULL,
-    Transaction_ID INT,
-    Fees NUMERIC(9, 2),
-    Meter_Number VARCHAR(40),
-    Message_ID VARCHAR(255),
-    PRIMARY KEY (ID)
-) ENGINE = InnoDB;
+CREATE TABLE IF NOT EXISTS `reconciliation_db`.`PowerNetPPSales` (
+  `ID` INT NOT NULL AUTO_INCREMENT,
+  `Partner` VARCHAR(30) NOT NULL,
+  `Token` VARCHAR(30) NOT NULL,
+  `Amount` DECIMAL(9,2) NULL DEFAULT NULL,
+  `KWH` DECIMAL(9,2) NULL DEFAULT NULL,
+  `VendDate` VARCHAR(30) NOT NULL,
+  `Transaction_ID` INT NULL DEFAULT NULL,
+  `Fees` DECIMAL(9,2) NULL DEFAULT NULL,
+  `Meter_Number` VARCHAR(40) NULL DEFAULT NULL,
+  `Message_ID` VARCHAR(255) NULL DEFAULT NULL,
+  PRIMARY KEY (`ID`))
+ENGINE = InnoDB
 
-CREATE TABLE PartnerPPSales (
-    ID INT AUTO_INCREMENT NOT NULL,
-    Partner_ID VARCHAR(30) NOT NULL,
-    Token VARCHAR(30),
-    Amount NUMERIC(9, 2),
-    KWH NUMERIC(9, 2),
-    VendDate DATETIME NOT NULL,
-    Transaction_ID VARCHAR(40),
-    Fees NUMERIC(9, 2),
-    Meter_Number VARCHAR(40),
-    Eneo_Account VARCHAR(40),
-    MSGID VARCHAR(40),
-    PRIMARY KEY (ID)
-) ENGINE = InnoDB;
+CREATE TABLE IF NOT EXISTS `reconciliation_db`.`PartnerPPSales` (
+  `ID` INT NOT NULL AUTO_INCREMENT,
+  `Partner_ID` VARCHAR(30) NOT NULL,
+  `Token` VARCHAR(30) NULL DEFAULT NULL,
+  `Amount` VARCHAR(30) NULL DEFAULT NULL,
+  `KWH` VARCHAR(30) NULL DEFAULT NULL,
+  `VendDate` VARCHAR(30) NOT NULL,
+  `Transaction_ID` VARCHAR(40) NULL DEFAULT NULL,
+  `Fees` VARCHAR(30) NULL DEFAULT NULL,
+  `Meter_Number` VARCHAR(40) NULL DEFAULT NULL,
+  `Eneo_Account` VARCHAR(40) NULL DEFAULT NULL,
+  `Message_ID` VARCHAR(40) NOT NULL,
+  `Recon_ID` VARCHAR(45) NULL DEFAULT NULL,
+  PRIMARY KEY (`ID`))
+ENGINE = InnoDB
 
-CREATE TABLE Partners (
-    ID INT AUTO_INCREMENT NOT NULL,
-    Partner_Name VARCHAR(30) NOT NULL,
-    Source VARCHAR(100) NOT NULL,
-    File_Type VARCHAR(30) NOT NULL,
-    Delimeter VARCHAR(30) NOT NULL,
-    Partner_ID VARCHAR(30) NOT NULL,
-    Token VARCHAR(30),
-    Amount VARCHAR(30),
-    KWH VARCHAR(30),
-    VendDate VARCHAR(30) NOT NULL,
-    Transaction_ID VARCHAR(30),
-    Fees VARCHAR(30),
-    Meter_Number VARCHAR(30),
-    Eneo_Account VARCHAR(30),
-    Reconcile_By VARCHAR(30),
-    PRIMARY KEY (ID)
-) ENGINE = InnoDB;
+CREATE TABLE IF NOT EXISTS `reconciliation_db`.`BrokenSales` (
+  `ID` INT NOT NULL AUTO_INCREMENT,
+  `Partner_ID` VARCHAR(30) NULL DEFAULT NULL,
+  `Token` VARCHAR(30) NULL DEFAULT NULL,
+  `Amount` VARCHAR(30) NULL DEFAULT NULL,
+  `KWH` VARCHAR(30) NULL DEFAULT NULL,
+  `VendDate` VARCHAR(30) NULL DEFAULT NULL,
+  `Transaction_ID` VARCHAR(40) NULL DEFAULT NULL,
+  `Fees` VARCHAR(30) NULL DEFAULT NULL,
+  `Meter_Number` VARCHAR(40) NULL DEFAULT NULL,
+  `Eneo_Account` VARCHAR(40) NULL DEFAULT NULL,
+  `Message_ID` VARCHAR(40) NULL DEFAULT NULL,
+  `Broken_Fields` VARCHAR(100) NOT NULL,
+  PRIMARY KEY (`ID`))
+ENGINE = InnoDB
 
-CREATE TABLE Exceptions (
-    ID INT AUTO_INCREMENT NOT NULL,
-    Type VARCHAR(30) NOT NULL,
-    Reference NUMERIC(9, 2) NOT NULL,
-    Status VARCHAR(30) NOT NULL,
-    Partner_ID VARCHAR(30),
-    Amount DECIMAL(10, 2),
-    Transaction_ID VARCHAR(30),
-    Meter_Number VARCHAR(30),
-    Token VARCHAR(50),
-    VendDate DATE,
-    Recon_ID VARCHAR(35),
-    MsgID VARCHAR(30),
-    PRIMARY KEY (ID)
-) ENGINE = InnoDB;
+CREATE TABLE IF NOT EXISTS `reconciliation_db`.`LoadStatus` (
+  `ID` INT NOT NULL AUTO_INCREMENT,
+  `Recon_Date` VARCHAR(45) NOT NULL,
+  `Partner_ID` VARCHAR(45) NOT NULL,
+  `Recon_ID` VARCHAR(45) NOT NULL,
+  `Sales_Count` INT NULL DEFAULT NULL,
+  `Broken_Sales_Count` INT NULL DEFAULT NULL,
+  PRIMARY KEY (`ID`))
+ENGINE = InnoDB
 
-CREATE TABLE LoadExceptionSales (
-    ID INT AUTO_INCREMENT NOT NULL,
-    Type VARCHAR(30),
-    Partner_ID VARCHAR(30),
-    Token VARCHAR(30),
-    Amount NUMERIC(9, 2),
-    KWH NUMERIC(9, 2),
-    VendDate DATETIME,
-    Transaction_ID VARCHAR(40),
-    Fees NUMERIC(9, 2),
-    Meter_Number VARCHAR(40),
-    Eneo_Account VARCHAR(40),
-    MSGID VARCHAR(255),
-    PRIMARY KEY (ID)
-) ENGINE = InnoDB;
+CREATE TABLE IF NOT EXISTS `reconciliation_db`.`Exceptions` (
+  `ID` INT NOT NULL AUTO_INCREMENT,
+  `Type` VARCHAR(30) NOT NULL,
+  `Reference` DECIMAL(9,2) NOT NULL,
+  `Status` VARCHAR(30) NOT NULL,
+  `Partner_ID` VARCHAR(30) NULL DEFAULT NULL,
+  `Amount` DECIMAL(10,2) NULL DEFAULT NULL,
+  `Transaction_ID` VARCHAR(30) NULL DEFAULT NULL,
+  `Meter_Number` VARCHAR(30) NULL DEFAULT NULL,
+  `Token` VARCHAR(50) NULL DEFAULT NULL,
+  `VendDate` VARCHAR(35) NULL DEFAULT NULL,
+  `Recon_ID` VARCHAR(35) NULL DEFAULT NULL,
+  `Message_ID` VARCHAR(30) NULL DEFAULT NULL,
+  PRIMARY KEY (`ID`))
+ENGINE = InnoDB
+
+CREATE TABLE IF NOT EXISTS `reconciliation_db`.`ReconStatus` (
+  `ID` INT NOT NULL AUTO_INCREMENT,
+  `Recon_Date` VARCHAR(45) NOT NULL,
+  `Partner_ID` VARCHAR(45) NOT NULL,
+  `Recon_ID` VARCHAR(45) NOT NULL,
+  `Sales_Count` INT NULL DEFAULT NULL,
+  `Match_Count` INT NULL DEFAULT NULL,
+  `Exceptions_Count` INT NULL DEFAULT NULL,
+  PRIMARY KEY (`ID`))
+ENGINE = InnoDB
