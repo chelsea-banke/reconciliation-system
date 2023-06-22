@@ -1,4 +1,4 @@
-const pool = require('../utils/pool')
+const runQuery = require('../utils/runQuery')
 
 class BrokenSales{ 
     async insert(sale, brokenFields){
@@ -23,15 +23,9 @@ class BrokenSales{
             brokenFields,
             sale.messageId,
         ]
-        try{
-            console.log((await connection.query(query, values))[0])
-        }
-        catch(error){
-            console.log("error", error)
-        }
-        finally{
-            connection.release()
-        }
+
+        console.log(await runQuery(query, values))
+        
     }
 }
 const brokenSales = new BrokenSales

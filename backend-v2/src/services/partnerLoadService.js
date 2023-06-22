@@ -2,9 +2,12 @@ const fieldCheck = require("../utils/fieldCheckUtils")
 const partnerSales = require("../models/partnerSales")
 const brokenSales = require("../models/brokensales")
 const preRocon = require("../models/preReconStatus")
+const formatDate = require("../utils/formatDate")
 
 const loader = async ( partnerId, sales)=>{
-    const currentDate = new Date().toLocaleString('en-US', { month: 'short', day: '2-digit', year: 'numeric' });
+    let currentDate = new Date();
+    currentDate = formatDate(`${currentDate}`);
+    
     const reconId = `${partnerId}-${currentDate}`
     let faultySales = []
 
@@ -21,6 +24,7 @@ const loader = async ( partnerId, sales)=>{
             brokenSales.insert(sale, JSON.stringify(status["fields"]))
         }
         else{
+            sale["vendDate"] = formatDate(sale["vendDate"])
             await partnerSales.insert(sale, reconId)
         }
     })

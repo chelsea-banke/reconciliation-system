@@ -1,4 +1,4 @@
-const pool = require('../utils/pool')
+const runQuery = require('../utils/runQuery')
 
 class PostRocon{ 
     async insert(status){
@@ -17,15 +17,9 @@ class PostRocon{
             status["brokenSalesCount"],
             status["reconId"],
         ]
-        try{
-            console.log((await connection.query(query, values))[0])
-        }
-        catch(error){
-            console.log("error", error)
-        }
-        finally{
-            connection.release()
-        }
+        
+        console.log(await runQuery(query, values))
+    
     }
 }
 const postRocon = new PostRocon

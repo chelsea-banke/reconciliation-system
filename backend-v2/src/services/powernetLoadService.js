@@ -6,8 +6,8 @@ const loadPowernet = async ()=>{
 
     sales.forEach(async (sale)=>{
         console.log(sale)
-        const vendDate = new Date(sale["VENING_TIME"])
-        vendDate.setHours(0, 0, 0, 0)
+        let vendDate = new Date(sale["VENING_TIME"])
+        vendDate = `${vendDate.getDate()}/${vendDate.getMonth() + 1}/${vendDate.getFullYear()}`;
 
         if (sale['ORDERS_ID'] != null){
             console.log(await powernetSales.insert({
@@ -15,7 +15,7 @@ const loadPowernet = async ()=>{
                 "token": sale["TOKEN"], 
                 "amount": sale["PAID"], 
                 "kwh": null, 
-                "vendDate": vendDate.toISOString().slice(0, 19).replace('T', ' '), 
+                "vendDate": vendDate, 
                 "transactionId": sale["ORDER_ID"], 
                 "fees": null, 
                 "meterNumber": sale["METER_NO"], 

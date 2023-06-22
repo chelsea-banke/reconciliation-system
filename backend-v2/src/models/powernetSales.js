@@ -1,4 +1,4 @@
-const pool = require('../utils/pool')
+const runQuery = require('../utils/runQuery')
 
 class PowerNetSales{
     async insert(sale){
@@ -21,16 +21,9 @@ class PowerNetSales{
             sale.messageId,
             sale.messageId,
         ]
-        
-        try{
-            console.log((await connection.query(query, values))[0])
-        }
-        catch(error){
-            console.log("error", error)
-        }
-        finally{
-            connection.release()
-        }
+            
+        console.log( await runQuery(query, values))
+    
     };
 }
 const powerNetSales = new PowerNetSales

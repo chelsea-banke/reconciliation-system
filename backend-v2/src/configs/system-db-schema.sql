@@ -61,6 +61,7 @@ CREATE TABLE Exceptions (
     Meter_Number VARCHAR(30),
     Token VARCHAR(50),
     VendDate DATE,
+    Recon_ID VARCHAR(35),
     MsgID VARCHAR(30),
     PRIMARY KEY (ID)
 ) ENGINE = InnoDB;

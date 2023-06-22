@@ -1,8 +1,7 @@
-const pool = require('../utils/pool')
+const runQuery = require('../utils/runQuery')
 
 class PartnerSales{ 
     async insert(sale, reconId){
-        const connection = await pool.getConnection()
         const query = `INSERT INTO PartnerPPSales (Partner_ID, Token, Amount, KWH, VendDate, Transaction_ID, Fees, Meter_Number, Eneo_Account, Message_ID, Recon_ID)
         SELECT ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
         FROM dual
@@ -23,16 +22,9 @@ class PartnerSales{
             reconId,
             sale.messageId,
         ]
-        
-        try{
-            console.log((await connection.query(query, values))[0])
-        }
-        catch(error){
-            console.log("error", error)
-        }
-        finally{
-            connection.release()
-        }
+          
+        console.log(await runQuery(query, values))
+          
     }
 }
 const partnerSales = new PartnerSales

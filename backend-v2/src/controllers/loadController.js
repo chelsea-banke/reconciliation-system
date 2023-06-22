@@ -5,15 +5,13 @@ const generateExceptions = require("../services/generateExceptions")
 const express = require('express')
 const router = express.Router()
 
-router.use("/partnerSales", (req, res, next)=>{
-  const loadDate = `${new Date().toLocaleString('en-US', { month: 'short', day: '2-digit', year: 'numeric' })}`
-  generateExceptions(loadDate, req.body["partnerId"])
-  next()
-})
-
 router.post('/partnerSales', async (req, res, next) => {
   try {
-    res.send(await partnerLoad(req.body["partnerId"], req.body["sales"]))
+    const results = await partnerLoad(req.body["partnerId"], req.body["sales"])
+    res.send(results)
+    res.on("finish", async()=>{
+      console.log(await generateExceptions(req.body["partnerId"], results["status"]["reconDate"]))
+    })
   } catch (error) {
     next(error)
   }
@@ -22,14 +20,6 @@ router.post('/partnerSales', async (req, res, next) => {
 router.get('/powernetSales', async (req, res, next)=>{
   try{
     res.send(await powernetLoad())
-  } catch (error) {
-    next(error)
-  }
-})
-
-router.post('/csv', async (req, res, next) => {
-  try {
-    res.send(await csvtojson.fieldDelimiter('#').getJsonFromCsv(req.body['path']), null, 2)
   } catch (error) {
     next(error)
   }
