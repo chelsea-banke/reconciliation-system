@@ -1,7 +1,7 @@
 const fieldCheck = require("../utils/fieldCheckUtils")
 const partnerSales = require("../models/partnerSales")
 const brokenSales = require("../models/brokensales")
-const preRocon = require("../models/preReconStatus")
+const loadStatus = require("../models/loadStatus")
 const formatDate = require("../utils/formatDate")
 
 const loader = async ( partnerId, sales)=>{
@@ -10,7 +10,7 @@ const loader = async ( partnerId, sales)=>{
     
     const reconId = `${partnerId}-${currentDate}`
     let faultySales = []
-
+    console.log(sales.length)
     sales.forEach(async sale => {
         const status = fieldCheck(sale)
         if (status["valid"] == false){
@@ -29,17 +29,16 @@ const loader = async ( partnerId, sales)=>{
         }
     })
 
-    const preReconStatus = {
+    const loadStatusData = {
         "reconDate": currentDate,
         "partnerId": partnerId,
         "reconId": reconId,
         "salesCount": sales.length,
         "brokenSalesCount": faultySales.length
     }
-    console.log(preReconStatus)
-    await preRocon.insert(preReconStatus)
+    await loadStatus.insert(loadStatusData)
     return({
-        "status": preReconStatus,
+        "status": loadStatusData,
         "brokenSales": faultySales
     })
 }

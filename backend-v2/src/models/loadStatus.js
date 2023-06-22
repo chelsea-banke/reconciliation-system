@@ -1,13 +1,12 @@
 const runQuery = require('../utils/runQuery')
 
-class PostRocon{ 
+class LoadStatus{ 
     async insert(status){
-        const connection = await pool.getConnection()
-        const query = `INSERT INTO PreReconStatus (Recon_Date, Partner_ID, Recon_ID, Sales_Count, Broken_Sales_Count)
+        const query = `INSERT INTO LoadStatus (Recon_Date, Partner_ID, Recon_ID, Sales_Count, Broken_Sales_Count)
         SELECT ?, ?, ?, ?, ?
         FROM dual
         WHERE NOT EXISTS (
-          SELECT 1 FROM PreReconStatus WHERE Recon_ID = ?
+          SELECT 1 FROM LoadStatus WHERE Recon_ID = ?
         )`
         const values = [
             status["reconDate"],
@@ -18,9 +17,9 @@ class PostRocon{
             status["reconId"],
         ]
         
-        console.log(await runQuery(query, values))
+        await runQuery(query, values)
     
     }
 }
-const postRocon = new PostRocon
-module.exports = postRocon
+const loadStatus = new LoadStatus
+module.exports = loadStatus
