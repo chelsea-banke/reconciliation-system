@@ -19,7 +19,10 @@ router.post('/partnerSales', async (req, res, next) => {
 
 router.get('/powernetSales', async (req, res, next)=>{
   try{
-    res.send(await powernetLoad())
+    const count = await powernetLoad()
+    res.send({
+      "powernetSalesCount": count
+    })
   } catch (error) {
     next(error)
   }

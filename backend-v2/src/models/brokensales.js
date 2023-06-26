@@ -2,7 +2,6 @@ const runQuery = require('../utils/runQuery')
 
 class BrokenSales{ 
     async insert(sale, brokenFields){
-        const connection = await pool.getConnection()
         const query = `INSERT INTO BrokenSales (Partner_ID, Token, Amount, KWH, VendDate, Transaction_ID, Fees, Meter_Number, Eneo_Account, Message_ID, Broken_Fields)
         SELECT ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
         FROM dual
@@ -24,7 +23,7 @@ class BrokenSales{
             sale.messageId,
         ]
 
-        await runQuery(query, values)
+        return(await runQuery(query, values))
         
     }
 }

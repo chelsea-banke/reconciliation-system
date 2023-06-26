@@ -23,7 +23,7 @@ class PartnerSales{
             sale.messageId,
         ]
           
-        await runQuery(query, values)
+        return (await runQuery(query, values))
           
     }
 }

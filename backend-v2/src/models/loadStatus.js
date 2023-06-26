@@ -17,8 +17,8 @@ class LoadStatus{
             status["reconId"],
         ]
         
-        await runQuery(query, values)
-    
+        return(await runQuery(query, values))
+
     }
 }
 const loadStatus = new LoadStatus

@@ -2,7 +2,6 @@ const runQuery = require('../utils/runQuery')
 
 class PowerNetSales{
     async insert(sale){
-        const connection = await pool.getConnection()
         const query = `INSERT INTO PowerNetPPSales (Partner, Token, Amount, KWH, VendDate, Transaction_ID, Fees, Meter_Number, Message_ID)
         SELECT ?, ?, ?, ?, ?, ?, ?, ?, ?
         FROM dual
@@ -22,7 +21,7 @@ class PowerNetSales{
             sale.messageId,
         ]
             
-        console.log( await runQuery(query, values))
+        return(await runQuery(query, values))
     
     };
 }

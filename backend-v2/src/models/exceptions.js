@@ -1,18 +1,48 @@
 const runQuery = require('../utils/runQuery')
 
 class Exceptions{ 
-    async generate(partner, vendDate){
+    async generatePowernetExceptions(partner, reconDate, vendDate){
         const query =(`
-            INSERT INTO Exceptions (Type, Reference, Status, Partner_ID, Amount, Transaction_ID, Meter_Number, Token, VendDate, Recon_ID, Message_ID)
-            SELECT 'Powernet', t1.ID, 'Unresolved', t1.Partner_ID, t1.Amount, t1.Transaction_id, t1.Meter_Number, t1.Token, t1.VendDate, t1.Recon_ID, t2.Message_ID
-            FROM PowerNetPPSales t2
-            LEFT JOIN PartnerPPSales t1 ON t1.Message_ID = t2.Message_ID
-            WHERE t2.VendDate = ?
-                AND t2.Partner IS NOT NULL
-                AND t1.Partner_ID = ?;      
-        `)
-        const values = [partner, vendDate]
+            INSERT INTO Exceptions (Type, Reference, Status, Partner_ID, Recon_ID, VendDate, Message_ID)
+            SELECT 'Powernet', t1.ID, 'Unresolved', t1.Partner,  ?, t1.VendDate, t1.Message_ID
+            FROM PowerNetPPSales t1
+            WHERE t1.Partner = ?
+                AND t1.VendDate = ?
+                AND EXISTS (
+                SELECT * FROM PartnerPPSales t2
+                WHERE t2.Recon_ID = ?
+                    AND NOT EXISTS (
+                        SELECT 1 FROM PartnerPPSales t2
+                        WHERE t1.Message_ID = t2.Message_ID
+                    )
+                );  
+            `
+        )
+        const values = [`${partner}-${reconDate}`, partner, vendDate, `${partner}-${reconDate}`]
         return((await runQuery(query, values))[0])      
+    }
+
+    async generatePartnerExceptions(partner, reconDate, vendDate){
+        console.log("running query...")
+        const query =(`
+            INSERT INTO Exceptions (Type, Reference, Status, Partner_ID, Recon_ID, VendDate, Message_ID)
+            SELECT 'Partner', t1.ID, 'Unresolved', t1.Partner_ID,  ?, t1.VendDate, t1.Message_ID
+            FROM PartnerPPSales t1
+            WHERE t1.Recon_ID = ?
+            AND EXISTS (
+                SELECT * FROM PowerNetPPSales t2
+                WHERE t2.VendDate = ?
+                AND t2.Partner = ?
+                AND NOT EXISTS (
+                    SELECT 1 FROM PowerNetPPSales t2
+                    WHERE t1.Message_ID = t2.Message_ID
+                )
+            );  
+        `)
+        const values = [`${partner}-${reconDate}`, `${partner}-${reconDate}`, vendDate, partner]
+        const results = (await runQuery(query, values))[0]
+        console.log("done runnig query")
+        return(results)  
     }
 }
 const exceptions = new Exceptions

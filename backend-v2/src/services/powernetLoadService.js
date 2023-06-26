@@ -5,7 +5,6 @@ const loadPowernet = async ()=>{
     const sales = (await csvtojson.fieldDelimiter('#').getJsonFromCsv("/home/chelsea/Downloads/powernet.csv"))
 
     sales.forEach(async (sale)=>{
-        console.log(sale)
         let vendDate = new Date(sale["VENING_TIME"])
         vendDate = `${vendDate.getDate()}/${vendDate.getMonth() + 1}/${vendDate.getFullYear()}`;
 
@@ -22,6 +21,7 @@ const loadPowernet = async ()=>{
                 "messageId": sale["MSGID"]
             }))
         }
+        return(sale.length)
     })
 }
 
