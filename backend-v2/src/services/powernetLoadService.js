@@ -1,15 +1,16 @@
 const csvtojson = require('convert-csv-to-json')
 const powernetSales = require("../models/powernetSales")
 
-const loadPowernet = async ()=>{
-    const sales = (await csvtojson.fieldDelimiter('#').getJsonFromCsv("/home/chelsea/Downloads/powernet.csv"))
-
-    sales.forEach(async (sale)=>{
+const loadPowernet = async (url)=>{
+    const sales = (await csvtojson.fieldDelimiter('#').getJsonFromCsv(url))
+    
+    let count = 0
+    await sales.forEach(async (sale)=>{
         let vendDate = new Date(sale["VENING_TIME"])
-        vendDate = `${vendDate.getDate()}/${vendDate.getMonth() + 1}/${vendDate.getFullYear()}`;
-
+        vendDate = `${vendDate.getDate()}/${vendDate.getMonth() + 1}/${vendDate.getFullYear()}`
+        
         if (sale['ORDERS_ID'] != null){
-            console.log(await powernetSales.insert({
+            (await powernetSales.insert({
                 "partner": sale["POS"], 
                 "token": sale["TOKEN"], 
                 "amount": sale["PAID"], 
@@ -21,8 +22,10 @@ const loadPowernet = async ()=>{
                 "messageId": sale["MSGID"]
             }))
         }
-        return(sale.length)
+        count+=1
+        console.log(count)
     })
+    return(sales.length)
 }
 
 module.exports = loadPowernet

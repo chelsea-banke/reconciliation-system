@@ -9,32 +9,37 @@ const generateExceptions = async (partner, reconDate)=>{
     try{
         const powernetSales = (await pool.query(`SELECT * FROM PowerNetPPSales WHERE VendDate = ?`, [vendDate]))[0]
         if (powernetSales.length != 0){
-            console.log(await exceptions.generatePowernetExceptions(partner, reconDate, vendDate))
-            console.log(await exceptions.generatePartnerExceptions(partner, reconDate, vendDate))
-    
+            // await exceptions.generatePowernetExceptions(partner, reconDate, vendDate)
+            await exceptions.generatePartnerExceptions(partner, reconDate, vendDate)
+            
             const reconId = `${partner}-${reconDate}`
-            const salesCount = (await pool.query(`SELECT * FROM PartnerPPSales WHERE Recon_ID = ?`, [reconId]))[0].length
+            const partnerExceptionsCount = (await pool.query(`SELECT * FROM Exceptions WHERE Recon_ID = ? AND Type = 'Partner'`, [reconId]))[0].length
+            const powernetExceptionsCount = (await pool.query(`SELECT * FROM Exceptions WHERE Recon_ID = ? AND Type = 'Powernet'`, [reconId]))[0].length
             const exceptionSales = (await pool.query(`SELECT * FROM Exceptions WHERE Recon_ID = ?`, [reconId]))[0]
-            const exceptionsCount = exceptionSales.length
-            const matchCount = salesCount - exceptionsCount
     
             const reconStatusData = {
                 "reconId": reconId,
                 "reconDate": reconDate,
                 "partner": partner,
-                "salesCount": salesCount,
-                "matchCount": matchCount,
-                "exceptionsCount": exceptionsCount
+                "partnerExceptionsCount": partnerExceptionsCount,
+                "powernetExceptionsCount": powernetExceptionsCount
             }
             reconStatus.insert(reconStatusData)
-    
+            
+            console.log({
+                "reconStats": reconStatusData
+            })
+
             return({
                 "reconStats": reconStatusData,
                 "exceptionSales": exceptionSales
             })
         }
         else {
-            return `it seems powernetSales for vendate ${vendDate} have not been uploaded`
+            return({
+                "vendDate": vendDate,
+                "powernetSalesCount": powernetSales.length
+            })
         }
     } catch(error){
         console.log("error generating exceptions due to: ", error)

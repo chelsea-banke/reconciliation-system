@@ -10,16 +10,16 @@ router.post('/partnerSales', async (req, res, next) => {
     const results = await partnerLoad(req.body["partnerId"], req.body["sales"])
     res.send(results)
     res.on("finish", async()=>{
-      console.log(await generateExceptions(req.body["partnerId"], results["status"]["reconDate"]))
+      await generateExceptions(req.body["partnerId"], results["status"]["reconDate"])
     })
   } catch (error) {
     next(error)
   }
 })
 
-router.get('/powernetSales', async (req, res, next)=>{
+router.post('/powernetSales', async (req, res, next)=>{
   try{
-    const count = await powernetLoad()
+    const count = await powernetLoad(req.body["url"])
     res.send({
       "powernetSalesCount": count
     })
@@ -29,38 +29,4 @@ router.get('/powernetSales', async (req, res, next)=>{
 })
 
 module.exports = router
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// csvtojson.fieldDelimiter(',').getJsonFromCsv('/home/chelsea/Downloads/ENEO PREPAY DU 21 au 24 04 2023_Express_Exchange.csv'), null, 2
-// router.get('/sales/:id', async (req, res, next) => {
-//   try {
-//     await load.byApi(req.params.id)
-//     res.send("done")
-//   } catch (error) {
-//     next(error)
-//   }
-// })
-
-// router.post('/new-partner', async (req, res, next) => {
-//   try {
-//     addNewPartner(req.body)
-//     res.send("ok")
-//   } catch (error) {
-//     next(error)
-//   }
-// })
+// (await runQuery(`SELECT * FROM PartnerPPSales WHERE Recon_ID = ?`, [results["status"]["reconId"]]))[0].length >= (results["status"]["salesCount"] - results["status"]["duplicateSalesCount"])

@@ -19,11 +19,11 @@ class Exceptions{
             `
         )
         const values = [`${partner}-${reconDate}`, partner, vendDate, `${partner}-${reconDate}`]
+        console.log('generating Powernet exceptions...')
         return((await runQuery(query, values))[0])      
     }
 
     async generatePartnerExceptions(partner, reconDate, vendDate){
-        console.log("running query...")
         const query =(`
             INSERT INTO Exceptions (Type, Reference, Status, Partner_ID, Recon_ID, VendDate, Message_ID)
             SELECT 'Partner', t1.ID, 'Unresolved', t1.Partner_ID,  ?, t1.VendDate, t1.Message_ID
@@ -40,8 +40,8 @@ class Exceptions{
             );  
         `)
         const values = [`${partner}-${reconDate}`, `${partner}-${reconDate}`, vendDate, partner]
+        console.log('generating Partner exceptions...')
         const results = (await runQuery(query, values))[0]
-        console.log("done runnig query")
         return(results)  
     }
 }

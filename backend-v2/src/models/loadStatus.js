@@ -2,8 +2,8 @@ const runQuery = require('../utils/runQuery')
 
 class LoadStatus{ 
     async insert(status){
-        const query = `INSERT INTO LoadStatus (Recon_Date, Partner_ID, Recon_ID, Sales_Count, Broken_Sales_Count)
-        SELECT ?, ?, ?, ?, ?
+        const query = `INSERT INTO LoadStatus (Recon_Date, Partner_ID, Recon_ID, Sales_Count, Broken_Sales_Count, Duplicate_Sales_Count)
+        SELECT ?, ?, ?, ?, ?, ?
         FROM dual
         WHERE NOT EXISTS (
           SELECT 1 FROM LoadStatus WHERE Recon_ID = ?
@@ -14,6 +14,7 @@ class LoadStatus{
             status["reconId"],
             status["salesCount"],
             status["brokenSalesCount"],
+            status["duplicateSalesCount"],
             status["reconId"],
         ]
         
